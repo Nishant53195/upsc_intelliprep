@@ -1,0 +1,36 @@
+export const TASK_STATUS = {
+  PENDING: "PENDING",
+
+  IN_PROGRESS:
+    "IN_PROGRESS",
+
+  COMPLETED:
+    "COMPLETED",
+
+  SKIPPED: "SKIPPED",
+
+  MISSED: "MISSED",
+};
+
+export const TASK_TYPES = {
+  STUDY: "STUDY",
+
+  REVISION:
+    "REVISION",
+
+  RECOVERY:
+    "RECOVERY",
+
+  TEST: "TEST",
+};
+
+export const INTENSITY_MODES = {
+  LIGHT: "LIGHT",
+
+  NORMAL: "NORMAL",
+
+  HEAVY: "HEAVY",
+
+  RECOVERY:
+    "RECOVERY",
+};
