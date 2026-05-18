@@ -31,6 +31,10 @@ import {
   updateRevision,
 } from "../../db/repositories/revisionRepository";
 
+import {
+  REVISION_STAGES,
+} from "../../constants/revision";
+
 export async function updateTaskStatus(
   task,
   newStatus,
@@ -84,7 +88,7 @@ if (shouldGenerateRevision) {
     existingRevisions.some(
       (revision) =>
         revision.revisionStage ===
-        "D3"
+        REVISION_STAGES.D3
     );
 
   if (!alreadyInitialized) {

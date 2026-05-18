@@ -2,6 +2,10 @@ import dayjs from "dayjs";
 
 import { db } from "../dexie";
 
+import {
+  TASK_TYPES,
+} from "../../constants/scheduler";
+
 export async function saveTasks(
   tasks = []
 ) {
@@ -100,7 +104,13 @@ export async function bulkUpdateTasks(
 export async function deleteTasksAfterDate(
   date
 ) {
-  const tasks =
+  // IMPORTANT:
+  // Revision tasks must survive
+  // schedule regeneration.
+  //
+  // ONLY study execution tasks
+  // should be regenerated.
+  const futureTasks =
     await db.schedule_tasks
       .filter(
         (task) =>
@@ -109,9 +119,17 @@ export async function deleteTasksAfterDate(
       )
       .toArray();
 
-  const ids = tasks.map(
-    (task) => task.id
-  );
+  const deletableTasks =
+    futureTasks.filter(
+      (task) =>
+        task.type !==
+        TASK_TYPES.REVISION
+    );
+
+  const ids =
+    deletableTasks.map(
+      (task) => task.id
+    );
 
   return await db.schedule_tasks
     .bulkDelete(ids);

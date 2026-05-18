@@ -2,7 +2,7 @@ import Dexie from "dexie";
 
 export const db = new Dexie("upsc_intelliprep_db");
 
-db.version(9).stores({
+db.version(10).stores({
   users: "id,email",
 
   onboarding_config:  "id,userId,completed",
@@ -43,6 +43,7 @@ db.version(9).stores({
   subjectId,
   topicId,
   subtopicId,
+  revisionId,
   type,
   scheduledDate,
   estimatedMinutes,

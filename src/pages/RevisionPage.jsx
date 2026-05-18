@@ -91,7 +91,7 @@ function RevisionPage() {
               >
                 <div className="flex items-center justify-between">
                   <p className="font-medium">
-                    {revision.subtopicId}
+                    {revision.subtopicName}
                   </p>
 
                   <span className="rounded-md bg-purple-900/40 px-2 py-1 text-xs text-purple-300">
