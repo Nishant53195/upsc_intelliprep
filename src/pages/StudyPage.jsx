@@ -8,19 +8,32 @@ import {
   fetchFullSubject,
 } from "../services/syllabus/getSyllabus";
 
-import { calculateSubjectProgress } from "../engines/syllabus/calculateSubjectProgress";
+import { calculateSubjectProgress }
+  from "../engines/syllabus/calculateSubjectProgress";
 
-import SubjectCard from "../modules/syllabus/components/SubjectCard";
+import SubjectCard
+  from "../modules/syllabus/components/SubjectCard";
 
-import TopicList from "../modules/syllabus/components/TopicList";
+import TopicList
+  from "../modules/syllabus/components/TopicList";
 
-import TodayTasksSection from "../modules/syllabus/components/TodayTaskSection";
+import TodayTasksSection
+  from "../modules/syllabus/components/TodayTaskSection";
 
-import { fetchTodayTasks } from "../services/scheduler/getTodayTasks";
+import { fetchTodayTasks }
+  from "../services/scheduler/getTodayTasks";
 
-import { TASK_STATUS } from "../constants/scheduler";
+import {
+  TASK_STATUS,
+} from "../constants/scheduler";
 
-import { updateTaskStatus } from "../db/repositories/scheduleRepository";
+import {
+  updateTaskStatus,
+} from "../services/scheduler/updateTaskStatus";
+
+import {
+  processMissedTasks,
+} from "../services/scheduler/processMissedTasks";
 
 function StudyPage() {
   const [subjects, setSubjects] =
@@ -36,28 +49,34 @@ function StudyPage() {
     setSubjectTopics,
   ] = useState({});
 
-  const [todayTasks, setTodayTasks] =
-  useState([]);
+  const [
+    todayTasks,
+    setTodayTasks,
+  ] = useState([]);
+
+  async function fetchStudyData() {
+    try {
+      // 1. Stabilize lifecycle
+      await processMissedTasks();
+
+      // 2. Load subjects
+      const data =
+        await fetchSubjects();
+
+      setSubjects(data);
+
+      // 3. Load today's tasks
+      const tasks =
+        await fetchTodayTasks();
+
+      setTodayTasks(tasks);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
-    async function loadSubjects() {
-      try {
-        const data =
-          await fetchSubjects();
-
-        setSubjects(data);
-
-        const tasks =
-  await fetchTodayTasks();
-
-setTodayTasks(tasks);
-
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    loadSubjects();
+    fetchStudyData();
   }, []);
 
   async function handleToggle(
@@ -101,25 +120,38 @@ setTodayTasks(tasks);
     }
   }
 
-  async function handleTaskComplete(
-  taskId
-) {
-  try {
-    await updateTaskStatus(
-      taskId,
-      TASK_STATUS.COMPLETED
-    );
-
-    const updatedTasks =
+  async function refreshTasks() {
+    const refreshedTasks =
       await fetchTodayTasks();
 
     setTodayTasks(
-      updatedTasks
+      refreshedTasks
     );
-  } catch (error) {
-    console.error(error);
   }
-}
+
+  async function handleTaskComplete(
+    task
+  ) {
+    await updateTaskStatus(
+      task,
+      TASK_STATUS.COMPLETED
+    );
+
+    await refreshTasks();
+  }
+
+  async function handleRevisionComplete(
+    task,
+    recallQuality
+  ) {
+    await updateTaskStatus(
+      task,
+      TASK_STATUS.COMPLETED,
+      recallQuality
+    );
+
+    await refreshTasks();
+  }
 
   return (
     <div className="min-h-screen bg-slate-900 p-6 text-white">
@@ -129,11 +161,14 @@ setTodayTasks(tasks);
         </h1>
 
         <TodayTasksSection
-  tasks={todayTasks}
-  onTaskComplete={
-    handleTaskComplete
-  }
-/>
+          tasks={todayTasks}
+          onTaskComplete={
+            handleTaskComplete
+          }
+          onRevisionComplete={
+            handleRevisionComplete
+          }
+        />
 
         <div className="mt-8 space-y-4">
           {subjects.map(
@@ -144,24 +179,24 @@ setTodayTasks(tasks);
                 }
               >
                 <SubjectCard
-  subject={subject}
-  expanded={
-    expandedSubject ===
-    subject.id
-  }
-  progress={
-    calculateSubjectProgress(
-      subjectTopics[
-        subject.id
-      ] || []
-    )
-  }
-  onToggle={() =>
-    handleToggle(
-      subject.id
-    )
-  }
-/>
+                  subject={
+                    subject
+                  }
+                  expanded={
+                    expandedSubject ===
+                    subject.id
+                  }
+                  progress={calculateSubjectProgress(
+                    subjectTopics[
+                      subject.id
+                    ] || []
+                  )}
+                  onToggle={() =>
+                    handleToggle(
+                      subject.id
+                    )
+                  }
+                />
 
                 {expandedSubject ===
                   subject.id && (

@@ -2,7 +2,7 @@ import Dexie from "dexie";
 
 export const db = new Dexie("upsc_intelliprep_db");
 
-db.version(6).stores({
+db.version(9).stores({
   users: "id,email",
 
   onboarding_config:  "id,userId,completed",
@@ -49,10 +49,46 @@ db.version(6).stores({
   actualMinutes,
   status,
   intensityMode,
+  generationType,
+  sourceType,
+  priorityScore,
+  carryForwardCount,
+  recoveryInjectedAt,
+  orderIndex,
+  isRecoveryTask,
+  originalScheduledDate,
+  completedAt,
   createdAt
 `,
 
-  revisions: "id,userId,dueDate,status",
+ revisions: `
+  id,
+  userId,
+
+  subjectId,
+  topicId,
+  subtopicId,
+
+  sourceTaskId,
+  linkedScheduleTaskId,
+
+  revisionStage,
+
+  dueDate,
+  completedAt,
+
+  recallQuality,
+  memoryState,
+
+  intervalDays,
+  nextRevisionDate,
+
+  revisionCount,
+
+  status,
+
+  createdAt
+`,
 
   weak_topics: "id,userId,topicId,severity",
 

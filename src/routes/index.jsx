@@ -8,6 +8,7 @@ import LandingPage from "../pages/LandingPage";
 import OnboardingPage from "../pages/OnboardingPage";
 import DashboardPage from "../pages/DashboardPage";
 import StudyPage from "../pages/StudyPage";
+import RevisionPage from "../pages/RevisionPage";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,17 @@ const router = createBrowserRouter([
     <ProtectedRoute>
       <AppLayout>
         <StudyPage />
+      </AppLayout>
+    </ProtectedRoute>
+  ),
+},
+
+{
+  path: "/revision",
+  element: (
+    <ProtectedRoute>
+      <AppLayout>
+        <RevisionPage />
       </AppLayout>
     </ProtectedRoute>
   ),

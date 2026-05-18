@@ -18,6 +18,9 @@ import {
   hydrateAuth,
 } from "../services/hydration/hydrateAuth";
 
+
+import { db } from "../db/dexie";
+import { regenerateScheduleFromToday } from "../engines/scheduler/regenerateScheduleFromToday";
 function App() {
   const user =
     useAuthStore(
@@ -25,6 +28,8 @@ function App() {
     );
 
   useEffect(() => {
+    window.db=db;
+    window.regenerateScheduleFromToday=regenerateScheduleFromToday
     hydrateAuth();
   }, []);
 
