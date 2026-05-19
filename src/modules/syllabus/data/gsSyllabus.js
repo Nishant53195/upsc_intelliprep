@@ -336,7 +336,7 @@ const gsSyllabus = [
       },
       {
         id: "alexanders-invasion",
-        name: "Alexander’s Invasion",
+        name: "Alexanders Invasion",
         estimatedMinutes: 25,
         difficulty: 2,
       },
@@ -3432,7 +3432,7 @@ difficulty: 3,
     subtopics: [
       {
         id: "the-shastris-years",
-        name: "The Shastri’s years",
+        name: "The Shastris years",
         estimatedMinutes: 25,
         difficulty: 2,
       },
@@ -4691,7 +4691,7 @@ difficulty: 3,
   },
   {
     id: "earths-magnetic-field",
-    name: "Earth’s Magnetic Field",
+    name: "Earths Magnetic Field",
     subtopics: [
       {
         id: "dynamo-theory",
@@ -5742,7 +5742,7 @@ difficulty: 3,
     subtopics: [
       {
         id: "indias-frontier",
-        name: "India’s frontier",
+        name: "Indias frontier",
         estimatedMinutes: 25,
         difficulty: 2,
       },
@@ -6229,226 +6229,6 @@ difficulty: 3,
     ],
   },
 ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
-},
-{
-     id: "modern-history",
-    type: "GS",
-    paper: "GS1",
-    name: "Modern History",
-
-    topics: [
-{
-id: "the-later-mughals",
-name: "The later Mughals",
-subtopics: [
-{
-id: "later-mughals-sub",
-name: "Later Mughals",
-estimatedMinutes: 30,
-difficulty: 2,
-},
-],
-},
-{},{},{}
-    ]
 },
 
 

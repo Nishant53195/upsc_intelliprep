@@ -15,7 +15,7 @@ function KnowledgeGraph() {
         ]}
       />
 
-      <div className="h-64 rounded-3xl border border-dashed border-white/10 bg-[#11151b]" />
+      
     </SectionCard>
   );
 }

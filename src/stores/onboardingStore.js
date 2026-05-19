@@ -9,11 +9,22 @@ import optionalSyllabus from "../modules/syllabus/data/optionalSyllabus";
 const defaultOptional =
   optionalSubjects[0];
 
-const defaultTopics =
-  optionalSyllabus.flatMap(
-    (paper) =>
-      paper.topics || []
-  );
+function getOptionalTopics(
+  optionalSubject
+) {
+  return optionalSyllabus
+    .filter((paper) =>
+      paper.id
+        .toLowerCase()
+        .startsWith(
+          optionalSubject.toLowerCase()
+        )
+    )
+    .flatMap(
+      (paper) =>
+        paper.topics || []
+    );
+}
 
 const initialState = {
   hydrated: false,
@@ -43,9 +54,10 @@ const initialState = {
     ...gsSubjects,
   ],
 
-  optionalSequence: [
-    ...defaultTopics,
-  ],
+ optionalSequence:
+  getOptionalTopics(
+    defaultOptional?.name
+  ),
 };
 
 const useOnboardingStore =
@@ -89,12 +101,15 @@ const useOnboardingStore =
         }),
 
     setOptionalSubject:
-      (
-        optionalSubject
-      ) =>
-        set({
-          optionalSubject,
-        }),
+  (optionalSubject) =>
+    set({
+      optionalSubject,
+
+      optionalSequence:
+        getOptionalTopics(
+          optionalSubject
+        ),
+    }),
 
     setGSSequence:
       (gsSequence) =>

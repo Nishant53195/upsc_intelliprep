@@ -42,36 +42,7 @@ function TestHub() {
         ]}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {[
-          "Attempt Test",
-          "Feed Offline Marks",
-          "Analytics",
-        ].map((item) => (
-          <div
-            key={item}
-            className="rounded-3xl border border-white/10 bg-[#11151b] p-5"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400">
-                  {
-                    activeMode
-                  }
-                </p>
-
-                <h3 className="mt-2 text-lg font-medium">
-                  {item}
-                </h3>
-              </div>
-
-              <div className="h-12 w-12 rounded-2xl bg-white/[0.05]" />
-            </div>
-
-            <div className="mt-6 h-24 rounded-2xl border border-dashed border-white/10" />
-          </div>
-        ))}
-      </div>
+      
     </SectionCard>
   );
 }

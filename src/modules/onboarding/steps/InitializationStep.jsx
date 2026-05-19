@@ -8,6 +8,14 @@ import {
 import useAuthStore from "../../../stores/authStore";
 import OnboardingCard from "../components/OnboardingCard";
 import { useNavigate } from "react-router-dom";
+import {
+  initializeSyllabus,
+} from "../../../services/syllabus/initializeSyllabus";
+
+import {
+  initializeSchedule,
+} from "../../../services/scheduler/initializeSchedule";
+
 function InitializationStep() {
 
     const navigate = useNavigate();
@@ -129,30 +137,41 @@ const optionalSequence =
         <div className="mt-8 flex justify-end">
         <button
   onClick={async () => {
-    await saveOnboarding({
-      id: crypto.randomUUID(),
+  // 1. Save onboarding config
+  await saveOnboarding({
+    id: crypto.randomUUID(),
 
-      userId: user.uid,
+    userId: user.uid,
 
-      completed: true,
+    completed: true,
 
-      name,
+    name,
 
-      attemptYear,
+    attemptYear,
 
-      optionalSubject,
+    optionalSubject,
 
-      gsSequence,
+    gsSequence,
 
-      optionalSequence,
-    });
+    optionalSequence,
+  });
 
-    completeOnboarding();
+  // 2. Initialize syllabus
+  const normalizedData =
+    await initializeSyllabus();
 
-    navigate(
-      "/dashboard"
-    );
-  }}
+  // 3. Initialize schedule
+  await initializeSchedule(
+    normalizedData.subtopics,
+    user.uid
+  );
+
+  // 4. Mark onboarding complete
+  completeOnboarding();
+
+  // 5. Navigate dashboard
+  navigate("/dashboard");
+}}
   className="rounded-2xl bg-white px-6 py-4 font-medium text-black"
 >
   Enter Dashboard
