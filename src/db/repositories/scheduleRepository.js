@@ -64,10 +64,13 @@ export async function getAllTasks() {
 }
 
 export async function updateTask(
-  task
+  id,
+  updates
 ) {
-  return await db.schedule_tasks
-    .put(task);
+  return db.tasks.update(
+    id,
+    updates
+  );
 }
 
 export async function getPendingTasks() {

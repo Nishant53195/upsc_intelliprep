@@ -3,7 +3,7 @@ import {
   REVISION_STAGES,
 } from "../../constants/revision";
 
-import { buildRevision } from "./buildRevision";
+
 import { buildRevisionTask } from "./buildRevisionTask";
 import { calculateNextRevisionDate } from "./calculateNextRevisionDate";
 
@@ -19,7 +19,7 @@ export function generateInitialRevision({
     completedTask.scheduledDate
   );
 
-  const revision = buildRevision({
+  const revision = buildRevisionTask({
     userId: completedTask.userId,
 
     subjectId: completedTask.subjectId,

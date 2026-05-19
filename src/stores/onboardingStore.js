@@ -1,60 +1,190 @@
 import { create } from "zustand";
 
-const useOnboardingStore = create(
-  (set) => ({
-    targetYear: "",
+import gsSubjects from "../constants/gsSubjects";
 
-    optionalSubject: "",
+import optionalSubjects from "../constants/optionalSubjects";
 
-    gsSequence: [],
+import optionalSyllabus from "../modules/syllabus/data/optionalSyllabus";
 
-    optionalSequence: [],
+const defaultOptional =
+  optionalSubjects[0];
 
-    completed: false,
+const defaultTopics =
+  optionalSyllabus.flatMap(
+    (paper) =>
+      paper.topics || []
+  );
 
-    setTargetYear: (year) =>
-      set({
-        targetYear: year,
-      }),
+const initialState = {
+  hydrated: false,
 
-    setOptionalSubject: (
-      optionalSubject
+  currentStep: 1,
+
+  name: "",
+
+  studyHoursPerDay: 6,
+
+  attemptYear: 2027,
+
+  prelimsDate:
+    "2027-05-23",
+
+  mainsDate:
+    "2027-08-20",
+
+  optionalSubject:
+    defaultOptional?.name ||
+    "",
+
+  isOnboardingCompleted:
+    false,
+
+  gsSequence: [
+    ...gsSubjects,
+  ],
+
+  optionalSequence: [
+    ...defaultTopics,
+  ],
+};
+
+const useOnboardingStore =
+  create((set) => ({
+    ...initialState,
+
+    setHydrated: (
+      hydrated
     ) =>
       set({
-        optionalSubject,
+        hydrated,
       }),
 
-    setGsSequence: (gsSequence) =>
-      set({
-        gsSequence,
-      }),
+    setName: (name) =>
+      set({ name }),
 
-    setOptionalSequence: (
-      optionalSequence
-    ) =>
-      set({
-        optionalSequence,
-      }),
+    setStudyHoursPerDay:
+      (
+        studyHoursPerDay
+      ) =>
+        set({
+          studyHoursPerDay,
+        }),
 
-    setCompleted: (completed) =>
-      set({
-        completed,
-      }),
+    setAttemptYear:
+      (attemptYear) =>
+        set({
+          attemptYear,
+        }),
 
-    hydrateOnboarding: (data) =>
-      set({
-        ...data,
-      }),
+    setPrelimsDate:
+      (prelimsDate) =>
+        set({
+          prelimsDate,
+        }),
 
-    resetOnboarding: () =>
-      set({
-        targetYear: "",
-        optionalSubject: "",
-        gsSequence: [],
-        optionalSequence: [],
-        completed: false,
-      }),
-  })
-);
+    setMainsDate:
+      (mainsDate) =>
+        set({
+          mainsDate,
+        }),
 
-export default useOnboardingStore;
+    setOptionalSubject:
+      (
+        optionalSubject
+      ) =>
+        set({
+          optionalSubject,
+        }),
+
+    setGSSequence:
+      (gsSequence) =>
+        set({
+          gsSequence,
+        }),
+
+    setOptionalSequence:
+      (
+        optionalSequence
+      ) =>
+        set({
+          optionalSequence,
+        }),
+
+    nextStep: () =>
+      set((state) => ({
+        currentStep:
+          state.currentStep +
+          1,
+      })),
+
+    previousStep: () =>
+      set((state) => ({
+        currentStep:
+          Math.max(
+            1,
+            state.currentStep -
+              1
+          ),
+      })),
+
+    completeOnboarding:
+      () =>
+        set({
+          isOnboardingCompleted:
+            true,
+        }),
+
+    hydrateOnboarding:
+      (onboarding) =>
+        set({
+          hydrated: true,
+
+          isOnboardingCompleted:
+            onboarding.completed ??
+            false,
+
+          name:
+            onboarding.name ||
+            "",
+
+          studyHoursPerDay:
+            onboarding.studyHoursPerDay ||
+            6,
+
+          attemptYear:
+            onboarding.attemptYear ||
+            2027,
+
+          prelimsDate:
+            onboarding.prelimsDate ||
+            "2027-05-23",
+
+          mainsDate:
+            onboarding.mainsDate ||
+            "2027-08-20",
+
+          optionalSubject:
+            onboarding.optionalSubject ||
+            defaultOptional?.name ||
+            "",
+
+          gsSequence:
+            onboarding.gsSequence ||
+            [...gsSubjects],
+
+          optionalSequence:
+            onboarding.optionalSequence ||
+            [
+              ...defaultTopics,
+            ],
+        }),
+
+    resetOnboarding:
+      () =>
+        set({
+          ...initialState,
+        }),
+  }));
+
+export default
+  useOnboardingStore;

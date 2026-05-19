@@ -4,9 +4,6 @@ import {
   REVISION_STAGES,
   REVISION_STATUS,
 } from "../../constants/revision";
-
-import { buildRevision } from "./buildRevision";
-
 import { buildRevisionTask } from "./buildRevisionTask";
 
 import { getNextRevisionStage } from "./getNextRevisionStage";
@@ -50,7 +47,7 @@ export function generateNextRevision({
     );
 
   const nextRevision =
-    buildRevision({
+    buildRevisionTask({
       userId: revision.userId,
 
       subjectId:

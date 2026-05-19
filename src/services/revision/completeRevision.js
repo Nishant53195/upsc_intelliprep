@@ -61,16 +61,16 @@ if (
 
       recallQuality,
 
-      memoryState,
+      memoryState: nextMemoryState,
     }
   );
 
   // 2. Generate next stage
-  const {
-    nextRevision,
-    nextRevisionTask,
-    memoryState,
-  } = generateNextRevision({
+ const {
+  nextRevision,
+  nextRevisionTask,
+  memoryState: nextMemoryState,
+} = generateNextRevision({
     revision,
 
     completedTask,

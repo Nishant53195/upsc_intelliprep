@@ -2,10 +2,10 @@ import Dexie from "dexie";
 
 export const db = new Dexie("upsc_intelliprep_db");
 
-db.version(10).stores({
+db.version(11).stores({
   users: "id,email",
 
-  onboarding_config:  "id,userId,completed",
+  onboarding_config:  "id,userId,completed,attemptYear,optionalSubject",
 
    subjects: `
     id,

@@ -6,7 +6,7 @@ import AppLayout from "../layouts/AppLayout";
 
 import LandingPage from "../pages/LandingPage";
 import OnboardingPage from "../pages/OnboardingPage";
-import DashboardPage from "../pages/DashboardPage";
+import DashboardPage from "../modules/dashboard/pages/DashboardPage";
 import StudyPage from "../pages/StudyPage";
 import RevisionPage from "../pages/RevisionPage";
 
@@ -25,9 +25,8 @@ const router = createBrowserRouter([
   path: "/dashboard",
   element: (
     <ProtectedRoute>
-      <AppLayout>
         <DashboardPage />
-      </AppLayout>
+     
     </ProtectedRoute>
   ),
 },

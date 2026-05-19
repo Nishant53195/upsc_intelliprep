@@ -1,121 +1,98 @@
-import { useEffect } from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
-import {
-  loginWithGoogle,
-} from "../services/firestore/auth";
-
-import {
-  getOnboarding,
-} from "../db/repositories/onboardingRepository";
-
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
+import { getOnboarding } from "../db/repositories/onboardingRepository";
+import { handleGoogleLogin } from "../modules/auth/services/handleGoogleLogin";
+import AuthLayout from "../modules/auth/components/AuthLayout";
+import IntelligenceNetwork from "../modules/auth/components/IntelligenceNetwork";
+import LoginCard from "../modules/auth/components/LoginCard";
+import GoogleLoginButton from "../modules/auth/components/GoogleLoginButton";
+import AuthError from "../modules/auth/components/AuthError";
 
 function LandingPage() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const user =
-    useAuthStore(
-      (state) => state.user
-    );
-
-  const authInitialized =
-    useAuthStore(
-      (state) =>
-        state.authInitialized
-    );
-
-  const setUser =
-    useAuthStore(
-      (state) => state.setUser
-    );
+  const user = useAuthStore((state) => state.user);
+  const authInitialized = useAuthStore((state) => state.authInitialized);
+  const setUser = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
     async function checkUser() {
-      if (
-        !authInitialized
-      )
-        return;
-
+      if (!authInitialized) return;
       if (!user) return;
 
-      const onboarding =
-        await getOnboarding(
-          user.uid
-        );
+      const onboarding = await getOnboarding(user.uid);
 
-      if (
-        onboarding?.completed
-      ) {
-        navigate(
-          "/dashboard"
-        );
+      if (onboarding?.completed) {
+        navigate("/dashboard");
       } else {
-        navigate(
-          "/onboarding"
-        );
+        navigate("/onboarding");
       }
     }
 
     checkUser();
-  }, [
-    user,
-    authInitialized,
-    navigate,
-  ]);
-
-  async function handleLogin() {
-    try {
-      const user =
-        await loginWithGoogle();
-
-      setUser(user);
-
-      const onboarding =
-        await getOnboarding(
-          user.uid
-        );
-
-      if (
-        onboarding?.completed
-      ) {
-        navigate(
-          "/dashboard"
-        );
-      } else {
-        navigate(
-          "/onboarding"
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  }, [user, authInitialized, navigate]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 text-white">
-      <div className="w-full max-w-md rounded-2xl bg-slate-800 p-8">
-        <h1 className="text-3xl font-bold">
-          UPSC IntelliPrep
-        </h1>
-
-        <p className="mt-3 text-slate-400">
-          Intelligent UPSC
-          Preparation Operating
-          System
-        </p>
-
-        <button
-          onClick={handleLogin}
-          className="mt-8 w-full rounded-xl bg-blue-600 px-4 py-3 font-medium hover:bg-blue-500"
-        >
-          Continue with Google
-        </button>
+    <AuthLayout>
+      {/* Softened Deep Slate Background */}
+      <div className="fixed inset-0 z-0 bg-[#0B1120] pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
       </div>
-    </div>
+
+      {/* Global CSS for text shimmer */}
+      <style>{`
+        @keyframes text-flow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-text-flow {
+          background-size: 200% auto;
+          animation: text-flow 6s linear infinite;
+        }
+      `}</style>
+
+      <div className="relative z-10 flex min-h-screen w-full flex-col lg:flex-row">
+        {/* Left Side */}
+        <div className="hidden lg:flex lg:w-1/2">
+          <IntelligenceNetwork />
+        </div>
+
+        {/* Mobile Hero */}
+        <div className="flex flex-col justify-center px-8 pt-16 lg:hidden text-center sm:text-left">
+          <span className="mb-2 block text-xl font-medium tracking-[0.25em] text-cyan-200/60 uppercase drop-shadow-md">
+            UPSC
+          </span>
+          <h1 className="text-5xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-[linear-gradient(to_right,#e0e7ff,#c4b5fd,#a5f3fc,#e0e7ff)] animate-text-flow pb-1 drop-shadow-[0_0_15px_rgba(196,181,253,0.2)]">
+            IntelliPrep.
+          </h1>
+          <span className="mt-2 block text-xs font-mono tracking-[0.3em] text-slate-400 uppercase">
+            Version 1.0
+          </span>
+        </div>
+
+        {/* Right Side */}
+        <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2">
+          <LoginCard>
+            <GoogleLoginButton
+              loading={loading}
+              onClick={() =>
+                handleGoogleLogin({
+                  setUser,
+                  navigate,
+                  setLoading,
+                  setError,
+                })
+              }
+            />
+            <AuthError message={error} />
+          </LoginCard>
+        </div>
+      </div>
+    </AuthLayout>
   );
 }
 
