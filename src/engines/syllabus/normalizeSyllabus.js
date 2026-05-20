@@ -3,73 +3,130 @@ import {
   SUBTOPIC_STATUS,
 } from "../../constants/syllabus";
 
-export function normalizeSyllabus(syllabusData) {
+export function normalizeSyllabus(
+  syllabusData
+) {
   const subjects = [];
+
   const topics = [];
+
   const subtopics = [];
 
-  syllabusData.forEach((subject, subjectIndex) => {
-    subjects.push({
-      id: subject.id,
-      type: subject.type,
-      paper: subject.paper,
-      name: subject.name,
-      order: subjectIndex,
-    });
+  syllabusData.forEach(
+    (
+      subject,
+      subjectIndex
+    ) => {
+      // SUBJECT
+      subjects.push({
+        id: subject.id,
 
-    subject.topics.forEach((topic) => {
-      let totalEstimatedMinutes = 0;
+        type:
+          subject.type,
 
-      topics.push({
-        id: topic.id,
-        subjectId: subject.id,
-        name: topic.name,
+        paper:
+          subject.paper,
 
-        estimatedMinutes: 0,
+        name:
+          subject.name,
 
-        importanceScore: 0,
-        currentRelevance: 0,
-        pyqFrequency: 0,
-        healthScore: 100,
-
-        status: TOPIC_STATUS.NOT_STARTED,
+        order:
+          subjectIndex,
       });
 
-      topic.subtopics.forEach((subtopic) => {
-        totalEstimatedMinutes += subtopic.estimatedMinutes;
+      // TOPICS
+      subject.topics.forEach(
+        (
+          topic,
+          topicIndex
+        ) => {
+          let totalEstimatedMinutes =
+            0;
 
-        subtopics.push({
-  id: subtopic.id,
+          topics.push({
+            id: topic.id,
 
-  subjectId:
-    subject.id,
+            subjectId:
+              subject.id,
 
-  topicId:
-    topic.id,
+            name:
+              topic.name,
 
-  name: subtopic.name,
+            order:
+              topicIndex,
 
-  estimatedMinutes:
-    subtopic.estimatedMinutes,
+            estimatedMinutes: 0,
 
-  difficulty:
-    subtopic.difficulty,
+            importanceScore: 0,
 
-  status:
-    SUBTOPIC_STATUS.NOT_STARTED,
-});
-      });
+            currentRelevance: 0,
 
-      const topicIndex = topics.findIndex(
-        (t) => t.id === topic.id
+            pyqFrequency: 0,
+
+            healthScore: 100,
+
+            status:
+              TOPIC_STATUS.NOT_STARTED,
+          });
+
+          // SUBTOPICS
+          topic.subtopics.forEach(
+            (
+              subtopic,
+              subtopicIndex
+            ) => {
+              totalEstimatedMinutes +=
+                subtopic.estimatedMinutes;
+
+              subtopics.push({
+                id:
+                  subtopic.id,
+
+                subjectId:
+                  subject.id,
+
+                topicId:
+                  topic.id,
+
+                name:
+                  subtopic.name,
+
+                estimatedMinutes:
+                  subtopic.estimatedMinutes,
+
+                difficulty:
+                  subtopic.difficulty,
+
+                status:
+                  SUBTOPIC_STATUS.NOT_STARTED,
+
+                order:
+                  subtopicIndex,
+              });
+            }
+          );
+
+          // UPDATE TOTAL TOPIC TIME
+          const topicDbIndex =
+            topics.findIndex(
+              (t) =>
+                t.id ===
+                topic.id
+            );
+
+          if (
+            topicDbIndex !==
+            -1
+          ) {
+            topics[
+              topicDbIndex
+            ].estimatedMinutes =
+              totalEstimatedMinutes;
+          }
+        }
       );
-
-      if (topicIndex !== -1) {
-        topics[topicIndex].estimatedMinutes =
-          totalEstimatedMinutes;
-      }
-    });
-  });
+    }
+  );
 
   return {
     subjects,

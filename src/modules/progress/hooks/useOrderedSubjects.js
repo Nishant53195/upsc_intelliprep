@@ -22,37 +22,30 @@ function useOrderedSubjects(
         return [];
 
       // OPTIONAL
+if (
+  activePaper ===
+  "OPTIONAL"
+) {
+  const selectedOptional =
+    onboarding.optionalSubject;
+
+  return allSubjects.filter(
+    (subject) => {
       if (
-        activePaper ===
+        subject.type !==
         "OPTIONAL"
       ) {
-        const sequenceIds =
-          (
-            onboarding.optionalSequence ||
-            []
-          ).map(
-            (subject) =>
-              subject.id
-          );
-
-        return allSubjects
-          .filter(
-            (subject) =>
-              subject.type ===
-              "OPTIONAL"
-          )
-          .sort((a, b) => {
-            return (
-              sequenceIds.indexOf(
-                a.id
-              ) -
-              sequenceIds.indexOf(
-                b.id
-              )
-            );
-          });
+        return false;
       }
 
+      return subject.name
+        .toLowerCase()
+        .includes(
+          selectedOptional.toLowerCase()
+        );
+    }
+  );
+}
       // GS
       const sequenceIds =
         (

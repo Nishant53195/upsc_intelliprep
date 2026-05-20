@@ -1,6 +1,7 @@
 import {
   useState,
 } from "react";
+
 import useOrderedSubjects
 from "../hooks/useOrderedSubjects";
 
@@ -8,63 +9,65 @@ import TopicExplorer
 from "./TopicExplorer";
 
 function SyllabusProgressView() {
-
-      const [
+  const [
     activePaper,
     setActivePaper,
   ] = useState("GS1");
 
-  
-const papers = [
-  {
-    label: "GS I",
-    value: "GS1",
-  },
+  const [
+    selectedSubject,
+    setSelectedSubject,
+  ] = useState(null);
 
-  {
-    label: "GS II",
-    value: "GS2",
-  },
+  const papers = [
+    {
+      label: "GS I",
+      value: "GS1",
+    },
 
-  {
-    label: "GS III",
-    value: "GS3",
-  },
+    {
+      label: "GS II",
+      value: "GS2",
+    },
 
-  {
-    label: "GS IV",
-    value: "GS4",
-  },
+    {
+      label: "GS III",
+      value: "GS3",
+    },
 
-  {
-    label: "Optional",
-    value: "OPTIONAL",
-  },
-];
+    {
+      label: "GS IV",
+      value: "GS4",
+    },
+
+    {
+      label: "Optional",
+      value: "OPTIONAL",
+    },
+  ];
 
   const subjects =
-  useOrderedSubjects(
-    activePaper
-  );
-
-  const [
-  selectedSubject,
-  setSelectedSubject,
-] = useState(null);
-
-
+    useOrderedSubjects(
+      activePaper
+    );
 
   return (
     <div>
+      {/* PAPER SELECTOR */}
       <div className="mb-6 flex flex-wrap gap-3">
         {papers.map((paper) => (
           <button
             key={paper.label}
-            onClick={() =>
+            onClick={() => {
               setActivePaper(
                 paper.value
-              )
-            }
+              );
+
+              // reset selected subject
+              setSelectedSubject(
+                null
+              );
+            }}
             className={`rounded-xl px-4 py-2 text-sm font-semibold ${
               activePaper ===
               paper.value
@@ -77,34 +80,46 @@ const papers = [
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-  {subjects?.map(
-    (subject) => (
-      <div
-  key={subject.id}
-  onClick={() =>
-    setSelectedSubject(subject)
-  }
-  className="cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
->
-        <h3 className="text-lg font-semibold text-slate-900">
-          {subject.name}
-        </h3>
+      {/* SUBJECT GRID */}
+      {!selectedSubject && (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+          {subjects?.map(
+            (subject) => (
+              <div
+                key={
+                  subject.id
+                }
+                onClick={() =>
+                  setSelectedSubject(
+                    subject
+                  )
+                }
+                className="cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+              >
+                <h3 className="text-lg font-semibold text-slate-900">
+                  {
+                    subject.name
+                  }
+                </h3>
+              </div>
+            )
+          )}
+        </div>
+      )}
 
-        
-      </div>
-    )
-  )}
-</div>
-{
-  selectedSubject && (
-    <TopicExplorer
-      subject={
-        selectedSubject
-      }
-    />
-  )
-}
+      {/* TOPIC EXPLORER */}
+      {selectedSubject && (
+        <TopicExplorer
+          subject={
+            selectedSubject
+          }
+          onBackSubject={() =>
+            setSelectedSubject(
+              null
+            )
+          }
+        />
+      )}
     </div>
   );
 }
