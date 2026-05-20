@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import FloatingCompleteButton from "./FloatingCompleteButton";
 
-function DashboardLayout({ children }) {
+function DashboardLayout({ children,title,subtitle }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -32,7 +32,7 @@ function DashboardLayout({ children }) {
         On desktop, it looks like a rounded card floating inside the dark background. 
       */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-slate-50 transition-all duration-300 md:rounded-tl-[2rem] md:rounded-bl-[2rem] md:border-l md:border-y md:border-slate-700/50 md:my-2 md:mr-2 md:shadow-2xl">
-        <Topbar setMobileMenuOpen={setMobileMenuOpen} />
+        <Topbar setMobileMenuOpen={setMobileMenuOpen} title={title} subtitle={subtitle} />
 
         {/* Scrollable Main Content Area */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-8 lg:p-10">

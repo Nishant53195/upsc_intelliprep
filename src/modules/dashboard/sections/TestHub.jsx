@@ -16,8 +16,6 @@ function TestHub() {
 
   return (
     <SectionCard
-      title="Test Hub"
-      subtitle="Attempt and analyze UPSC tests."
     >
       <div className="mb-6 flex justify-start">
         <SegmentTabs

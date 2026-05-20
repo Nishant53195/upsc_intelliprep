@@ -1,9 +1,10 @@
 import { useState } from "react";
 
 import SectionCard from "../components/SectionCard";
-
+import SyllabusProgressView
+from "../../progress/components/SyllabusProgressView";
 import HubTabs from "../components/HubTabs";
-
+import PageHeader from "../components/PageHeader";
 const tabs = [
   "Tasks",
   "Revisions",
@@ -13,19 +14,28 @@ const tabs = [
 ];
 
 function StudyHub() {
-  const [activeTab] =
-    useState("Tasks");
+  const [
+  activeTab,
+  setActiveTab,
+] = useState("Tasks");
 
   return (
-    <SectionCard
-      title="Study Hub"
-      subtitle="Your central UPSC operating workspace."
-    >
+    
+    <SectionCard>
       <HubTabs
-        tabs={tabs}
-      />
-
       
+  tabs={tabs}
+  activeTab={activeTab}
+  onTabChange={setActiveTab}
+/>
+{
+  activeTab ===
+    "Syllabus Progress" && (
+    <SyllabusProgressView />
+  )
+}
+
+
     </SectionCard>
   );
 }

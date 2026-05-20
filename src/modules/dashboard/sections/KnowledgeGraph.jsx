@@ -5,8 +5,7 @@ import HubTabs from "../components/HubTabs";
 function KnowledgeGraph() {
   return (
     <SectionCard
-      title="Knowledge Graph"
-      subtitle="Explore intelligent topic connections."
+      
     >
       <HubTabs
         tabs={[

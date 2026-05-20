@@ -16,8 +16,6 @@ function PYQHub() {
 
   return (
     <SectionCard
-      title="PYQ Hub"
-      subtitle="Practice and analyze previous year questions."
     >
       <div className="mb-6 flex justify-start">
         <SegmentTabs

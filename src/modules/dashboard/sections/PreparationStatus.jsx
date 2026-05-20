@@ -11,10 +11,7 @@ const cards = [
 
 function PreparationStatus() {
   return (
-    <SectionCard
-      title="Preparation Status"
-      subtitle="Track your overall UPSC preparation health."
-    >
+    <SectionCard>
       
     </SectionCard>
   );

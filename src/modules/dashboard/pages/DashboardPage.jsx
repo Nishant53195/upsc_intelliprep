@@ -20,9 +20,62 @@ function DashboardPage() {
       (state) =>
         state.activeHub
     );
+   
+
+    const HUB_CONFIG = {
+  "Preparation Status": {
+    title: "Preparation Status",
+
+    subtitle:
+      "Track your preparation metrics and progress.",
+  },
+
+  "Study Hub": {
+    title: "Study Hub",
+
+    subtitle:
+      "Your central UPSC operating workspace.",
+  },
+
+  "PYQ Hub": {
+    title: "PYQ Hub",
+
+    subtitle:
+      "Previous year question analysis workspace.",
+  },
+
+  "Test Hub": {
+    title: "Test Hub",
+
+    subtitle:
+      "Mock tests and evaluation center.",
+  },
+
+  "Knowledge Graph": {
+    title: "Knowledge Graph",
+
+    subtitle:
+      "Visualize interconnections across topics.",
+  },
+
+  "Current Affairs": {
+    title: "Current Affairs",
+
+    subtitle:
+      "Daily national and international updates.",
+  },
+};
+
+ const activeConfig =
+  HUB_CONFIG[activeHub];
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+  title={activeConfig.title}
+  subtitle={
+    activeConfig.subtitle
+  }
+>
       <div className="min-h-full">
         {activeHub ===
           "Preparation Status" && (
