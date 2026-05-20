@@ -3,10 +3,6 @@ import {
   useState,
 } from "react";
 
-import {
-  refreshTodayTasks,
-} from "../../../services/scheduler/refreshTodayTasks";
-
 import SectionCard
 from "../components/SectionCard";
 
@@ -20,11 +16,8 @@ import TodayTaskCards
 from "../components/TodayTaskCards";
 
 import {
-  fetchTodayTasks,
-} from "../../../services/scheduler/getTodayTasks";
-
-import useScheduleStore
-from "../../../stores/scheduleStore";
+  refreshTodayTasks,
+} from "../../../services/scheduler/refreshTodayTasks";
 
 function StudyHub() {
   const [
@@ -35,25 +28,14 @@ function StudyHub() {
     "Tasks"
   );
 
-  const setTasks =
-    useScheduleStore(
-      (state) =>
-        state.setTasks
-    );
+  /*
+   --------------------------
+   LOAD TODAY TASKS
+   --------------------------
+  */
 
   useEffect(() => {
-    async function loadTasks() {
-      const groupedTasks =
-        await fetchTodayTasks();
-
-      setTasks(
-        groupedTasks
-      );
-
-       refreshTodayTasks();
-    }
-
-    loadTasks();
+    refreshTodayTasks();
   }, []);
 
   const tabs = [

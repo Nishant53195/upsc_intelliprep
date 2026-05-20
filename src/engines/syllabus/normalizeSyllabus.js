@@ -100,6 +100,12 @@ export function normalizeSyllabus(
                 status:
                   SUBTOPIC_STATUS.NOT_STARTED,
 
+                paper:
+  subject.paper,
+
+type:
+  subject.type,
+
                 order:
                   subtopicIndex,
               });

@@ -65,6 +65,13 @@ function TopicExplorer({
       [selectedTopic]
     ) || [];
 
+    const firstIncompleteTopic =
+  topics.find(
+    (topic) =>
+      topic.status !==
+      "COMPLETED"
+  );
+
   return (
     <div className="mt-8">
       {/* CHIPS */}
@@ -102,8 +109,13 @@ function TopicExplorer({
           {topics.map(
             (topic) => {
               const completed =
-                topic.status ===
-                "COMPLETED";
+  topic.status ===
+  "COMPLETED";
+
+const inProgress =
+  !completed &&
+  firstIncompleteTopic
+    ?.id === topic.id;
 
               return (
                 <div
@@ -133,10 +145,14 @@ function TopicExplorer({
 
                   <p className="mt-3 text-sm text-slate-500">
                     {
-                      completed
-                        ? "Completed"
-                        : "In Progress"
-                    }
+  completed
+    ? "Completed"
+
+    : inProgress
+    ? "In Progress"
+
+    : "Pending"
+}
                   </p>
                 </div>
               );

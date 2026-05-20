@@ -48,11 +48,7 @@ const rawTasks =
   );
 
 const todayTasks =
-  rawTasks.filter(
-    (task) =>
-      task.completed !==
-      true
-  );
+  rawTasks;
 
   /*
    --------------------------
@@ -206,8 +202,8 @@ const todayTasks =
       */
 
       const orderDiff =
-        (a.order || 0) -
-        (b.order || 0);
+        (a.orderIndex || 0) -
+        (b.orderIndex || 0);
 
       if (orderDiff !== 0) {
         return orderDiff;

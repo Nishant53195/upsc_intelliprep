@@ -29,6 +29,8 @@ export default function fillStudySlots({
 }) {
   const generatedTasks = [];
 
+  let globalTaskOrder = 0;
+
   let currentDate =
     dayjs(startDate);
 
@@ -76,7 +78,7 @@ export default function fillStudySlots({
     */
 
     revisionTasks.forEach(
-      (revisionTask, index) => {
+      (revisionTask) => {
         generatedTasks.push(
           buildTaskMetadata(
             {
@@ -91,9 +93,14 @@ export default function fillStudySlots({
                 SLOT_TYPES.REVISION,
 
               scheduledDate,
+
+              completed: false,
+
+              orderIndex:
+                globalTaskOrder,
             },
 
-            index
+            globalTaskOrder++
           )
         );
       }
@@ -161,9 +168,14 @@ export default function fillStudySlots({
               chunkMinutes,
 
             chunkMinutes,
+
+            completed: false,
+
+            orderIndex:
+              globalTaskOrder,
           },
 
-          optionalPointer
+          globalTaskOrder++
         )
       );
 
@@ -193,7 +205,7 @@ export default function fillStudySlots({
       });
 
     practiceTasks.forEach(
-      (practiceTask, index) => {
+      (practiceTask) => {
         generatedTasks.push(
           buildTaskMetadata(
             {
@@ -210,9 +222,14 @@ export default function fillStudySlots({
               estimatedMinutes:
                 practiceMinutes /
                 practiceTasks.length,
+
+              completed: false,
+
+              orderIndex:
+                globalTaskOrder,
             },
 
-            index
+            globalTaskOrder++
           )
         );
       }
@@ -258,8 +275,6 @@ export default function fillStudySlots({
             subjectId:
               subtopic.subjectId,
 
-               completed: false, 
-
             topicId:
               subtopic.topicId,
 
@@ -278,9 +293,14 @@ export default function fillStudySlots({
               chunkMinutes,
 
             chunkMinutes,
+
+            completed: false,
+
+            orderIndex:
+              globalTaskOrder,
           },
 
-          gsPointer
+          globalTaskOrder++
         )
       );
 

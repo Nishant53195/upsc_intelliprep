@@ -144,6 +144,7 @@ export async function completeTask(
   return await db.schedule_tasks
     .update(taskId, {
       completed: true,
+      status : "COMPLETED",
 
       completedAt:
         new Date(),
