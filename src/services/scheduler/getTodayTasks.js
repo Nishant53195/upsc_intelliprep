@@ -2,7 +2,9 @@ import dayjs from "dayjs";
 
 import {
   getTasksByDate,
+
   getMissedTasksForRecovery,
+
   bulkUpdateTasks,
 } from "../../db/repositories/scheduleRepository";
 
@@ -16,6 +18,8 @@ import {
 
 import {
   TASK_TYPES,
+
+  SLOT_TYPES,
 } from "../../constants/scheduler";
 
 import {
@@ -32,23 +36,53 @@ export async function fetchTodayTasks() {
       "YYYY-MM-DD"
     );
 
-  // 1. Fetch today's tasks
-  const todayTasks =
-    await getTasksByDate(
-      today
-    );
+  /*
+   --------------------------
+   FETCH TODAY TASKS
+   --------------------------
+  */
 
-  // 2. Fetch recovery candidates
+const rawTasks =
+  await getTasksByDate(
+    today
+  );
+
+const todayTasks =
+  rawTasks.filter(
+    (task) =>
+      task.completed !==
+      true
+  );
+
+  /*
+   --------------------------
+   FETCH MISSED TASKS
+   --------------------------
+  */
+
   const missedTasks =
     await getMissedTasksForRecovery();
 
-  // 3. Inject recovery queue
+  /*
+   --------------------------
+   RECOVERY INJECTION
+   --------------------------
+  */
+
   const executionQueue =
     injectRecoveryTasks({
       todayTasks,
+
       missedTasks,
+
       recoveryLimit: 2,
     });
+
+  /*
+   --------------------------
+   PERSIST RECOVERY TASKS
+   --------------------------
+  */
 
   const injectedRecoveryTasks =
     executionQueue.filter(
@@ -58,86 +92,206 @@ export async function fetchTodayTasks() {
     );
 
   if (
-    injectedRecoveryTasks.length > 0
+    injectedRecoveryTasks.length >
+    0
   ) {
     await bulkUpdateTasks(
       injectedRecoveryTasks
     );
   }
 
-  // 4. Enrich tasks
+  /*
+   --------------------------
+   ENRICH TASKS
+   --------------------------
+  */
+
   const enrichedTasks =
     await Promise.all(
       executionQueue.map(
         async (task) => {
           const subtopic =
-            await getSubtopicById(
-              task.subtopicId
-            );
-            let revision = null;
+            task.subtopicId
+              ? await getSubtopicById(
+                  task.subtopicId
+                )
+              : null;
 
-if (
-  task.type ===
-    TASK_TYPES.REVISION &&
-  task.revisionId
-) {
-  revision =
-    await getRevisionById(
-      task.revisionId
-    );
-}
+          let revision =
+            null;
+
+          if (
+            task.type ===
+              TASK_TYPES.REVISION &&
+            task.revisionId
+          ) {
+            revision =
+              await getRevisionById(
+                task.revisionId
+              );
+          }
 
           return {
-  ...task,
+            ...task,
 
-  subtopicName:
-    subtopic?.name ||
-    "Unknown",
+           subtopicName:
+  subtopic?.name ||
 
-  revisionStage:
-    revision?.revisionStage ||
-    null,
-
-  isRevision:
+  (
     task.type ===
-    TASK_TYPES.REVISION,
+    TASK_TYPES.PYQ
+      ? "PYQ Practice"
 
-  isStudy:
-    task.type ===
-    TASK_TYPES.STUDY,
+    : task.type ===
+      TASK_TYPES.MCQ
+      ? "MCQ Practice"
 
-  isRecovery:
-    task.type ===
-    TASK_TYPES.RECOVERY,
-};
+    : task.type ===
+      TASK_TYPES
+        .ANSWER_WRITING
+      ? "Answer Writing"
+
+    : task.type ===
+      TASK_TYPES.REVISION
+      ? "Revision Session"
+
+    : "Unknown"
+  ),
+
+            revisionStage:
+              revision?.revisionStage ||
+              null,
+
+            isRevision:
+              task.type ===
+              TASK_TYPES.REVISION,
+
+            isStudy:
+              task.type ===
+              TASK_TYPES.STUDY,
+
+            isPractice:
+              [
+                TASK_TYPES.PYQ,
+
+                TASK_TYPES.MCQ,
+
+                TASK_TYPES
+                  .ANSWER_WRITING,
+              ].includes(
+                task.type
+              ),
+
+            isRecovery:
+              task.isRecoveryTask ||
+              false,
+          };
         }
       )
     );
 
-enrichedTasks.sort(
-  (a, b) => {
-    // Revision priority
-    if (
-      a.isRevision &&
-      b.isRevision
-    ) {
-      return (
-        getRevisionPriority(
-          a.revisionStage
-        ) -
-        getRevisionPriority(
-          b.revisionStage
-        )
-      );
+  /*
+   --------------------------
+   SORT TASKS
+   --------------------------
+  */
+
+  enrichedTasks.sort(
+    (a, b) => {
+      /*
+       --------------------------
+       PRIMARY:
+       SEQUENTIAL TASK ORDER
+       --------------------------
+      */
+
+      const orderDiff =
+        (a.order || 0) -
+        (b.order || 0);
+
+      if (orderDiff !== 0) {
+        return orderDiff;
+      }
+
+      /*
+       --------------------------
+       REVISION PRIORITY
+       --------------------------
+      */
+
+      if (
+        a.isRevision &&
+        b.isRevision
+      ) {
+        return (
+          getRevisionPriority(
+            a.revisionStage
+          ) -
+          getRevisionPriority(
+            b.revisionStage
+          )
+        );
+      }
+
+      /*
+       --------------------------
+       STUDY BEFORE OTHERS
+       --------------------------
+      */
+
+      if (
+        a.isStudy &&
+        !b.isStudy
+      ) {
+        return -1;
+      }
+
+      if (
+        !a.isStudy &&
+        b.isStudy
+      ) {
+        return 1;
+      }
+
+      return 0;
     }
+  );
 
-    // Study first
-    if (a.isStudy) return -1;
-    if (b.isStudy) return 1;
+  /*
+   --------------------------
+   GROUP TASKS
+   --------------------------
+  */
 
-    return 0;
-  }
-);
+  const groupedTasks = {
+    gsTasks:
+      enrichedTasks.filter(
+        (task) =>
+          task.slotType ===
+          SLOT_TYPES.GS
+      ),
 
-  return enrichedTasks;
+    optionalTasks:
+      enrichedTasks.filter(
+        (task) =>
+          task.slotType ===
+          SLOT_TYPES.OPTIONAL
+      ),
+
+    revisionTasks:
+      enrichedTasks.filter(
+        (task) =>
+          task.slotType ===
+          SLOT_TYPES.REVISION
+      ),
+
+    practiceTasks:
+      enrichedTasks.filter(
+        (task) =>
+          task.slotType ===
+          SLOT_TYPES.PRACTICE
+      ),
+  };
+
+  return groupedTasks;
 }

@@ -53,6 +53,12 @@ const optionalSubject =
       state.optionalSubject
   );
 
+const dailyStudyHours =
+  useOnboardingStore(
+    (state) =>
+      state.dailyStudyHours
+  );
+
 const gsSequence =
   useOnboardingStore(
     (state) =>
@@ -162,8 +168,8 @@ const optionalSequence =
 
   // 3. Initialize schedule
   await initializeSchedule(
-    normalizedData.subtopics,
-    user.uid
+    user.uid,
+    dailyStudyHours
   );
 
   // 4. Mark onboarding complete

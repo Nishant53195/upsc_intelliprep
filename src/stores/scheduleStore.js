@@ -1,11 +1,38 @@
-import { create } from "zustand";
+import { create }
+from "zustand";
 
-const useScheduleStore = create((set) => ({
-  tasks: [],
+const useScheduleStore =
+  create((set) => ({
+    gsTasks: [],
 
-  setTasks: (tasks) => set({ tasks }),
+    optionalTasks: [],
 
-  clearTasks: () => set({ tasks: [] }),
-}));
+    revisionTasks: [],
 
-export default useScheduleStore;
+    practiceTasks: [],
+
+    setTodayTasks:
+      (
+        groupedTasks
+      ) =>
+        set({
+          gsTasks:
+            groupedTasks.gsTasks ||
+            [],
+
+          optionalTasks:
+            groupedTasks.optionalTasks ||
+            [],
+
+          revisionTasks:
+            groupedTasks.revisionTasks ||
+            [],
+
+          practiceTasks:
+            groupedTasks.practiceTasks ||
+            [],
+        }),
+  }));
+
+export default
+  useScheduleStore;

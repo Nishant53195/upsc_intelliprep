@@ -1,6 +1,11 @@
 import {
+  useEffect,
   useState,
 } from "react";
+
+import {
+  getSubjectProgress,
+} from "../../../services/progress/getSubjectProgress";
 
 import useOrderedSubjects
 from "../hooks/useOrderedSubjects";
@@ -51,6 +56,46 @@ function SyllabusProgressView() {
       activePaper
     );
 
+    const [
+  enrichedSubjects,
+
+  setEnrichedSubjects,
+] = useState([]);
+
+useEffect(() => {
+  async function enrich() {
+    const enriched =
+      await Promise.all(
+        subjects.map(
+          async (
+            subject
+          ) => {
+            const progress =
+              await getSubjectProgress(
+                subject.id
+              );
+
+            return {
+              ...subject,
+
+              ...progress,
+            };
+          }
+        )
+      );
+
+    setEnrichedSubjects(
+      enriched
+    );
+  }
+
+  if (
+    subjects?.length
+  ) {
+    enrich();
+  }
+}, [subjects]);
+
   return (
     <div>
       {/* PAPER SELECTOR */}
@@ -83,7 +128,7 @@ function SyllabusProgressView() {
       {/* SUBJECT GRID */}
       {!selectedSubject && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-          {subjects?.map(
+          {enrichedSubjects?.map(
             (subject) => (
               <div
                 key={
@@ -101,6 +146,19 @@ function SyllabusProgressView() {
                     subject.name
                   }
                 </h3>
+                <p className="mt-3 text-sm text-slate-500">
+  {subject.progress}%
+  completed
+</p>
+
+<div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+  <div
+    className="h-full rounded-full bg-emerald-500"
+    style={{
+      width: `${subject.progress}%`,
+    }}
+  />
+</div>
               </div>
             )
           )}

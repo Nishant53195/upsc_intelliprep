@@ -21,17 +21,10 @@ export async function saveTasks(
 export async function getTasksByDate(
   date
 ) {
-  const tasks =
-    await db.schedule_tasks
-      .where("scheduledDate")
-      .equals(date)
-      .toArray();
-
-  return tasks.sort(
-    (a, b) =>
-      a.orderIndex -
-      b.orderIndex
-  );
+  return await db.schedule_tasks
+    .where("scheduledDate")
+    .equals(date)
+    .sortBy("order");
 }
 
 export async function getAllTasks() {
@@ -142,5 +135,26 @@ export async function getMissedTasksForRecovery() {
   return await db.schedule_tasks
     .where("status")
     .equals("MISSED")
+    .toArray();
+}
+
+export async function completeTask(
+  taskId
+) {
+  return await db.schedule_tasks
+    .update(taskId, {
+      completed: true,
+
+      completedAt:
+        new Date(),
+    });
+}
+
+export async function getTasksBySubtopic(
+  subtopicId
+) {
+  return await db.schedule_tasks
+    .where("subtopicId")
+    .equals(subtopicId)
     .toArray();
 }

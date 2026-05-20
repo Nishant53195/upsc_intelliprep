@@ -23,17 +23,53 @@ export async function getTopicsBySubject(subjectId) {
     .toArray();
 }
 
-export async function getSubtopicsByTopic(topicId) {
-  return await db.subtopics
-    .where("topicId")
-    .equals(topicId)
-    .toArray();
-}
-
 export async function getSubtopicById(
   subtopicId
 ) {
   return await db.subtopics.get(
     subtopicId
   );
+}
+
+export async function getTopics() {
+  return await db.topics.toArray();
+}
+
+export async function getSubtopics() {
+  return await db.subtopics.toArray();
+}
+
+export async function completeSubtopic(
+  subtopicId
+) {
+  return await db.subtopics
+    .update(subtopicId, {
+      status:
+        "COMPLETED",
+
+      completedAt:
+        new Date(),
+    });
+}
+
+export async function completeTopic(
+  topicId
+) {
+  return await db.topics
+    .update(topicId, {
+      status:
+        "COMPLETED",
+
+      completedAt:
+        new Date(),
+    });
+}
+
+export async function getSubtopicsByTopic(
+  topicId
+) {
+  return await db.subtopics
+    .where("topicId")
+    .equals(topicId)
+    .sortBy("order");
 }

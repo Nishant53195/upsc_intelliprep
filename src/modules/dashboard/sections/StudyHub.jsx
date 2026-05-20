@@ -1,43 +1,91 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-import SectionCard from "../components/SectionCard";
+import {
+  refreshTodayTasks,
+} from "../../../services/scheduler/refreshTodayTasks";
+
+import SectionCard
+from "../components/SectionCard";
+
+import HubTabs
+from "../components/HubTabs";
+
 import SyllabusProgressView
 from "../../progress/components/SyllabusProgressView";
-import HubTabs from "../components/HubTabs";
-import PageHeader from "../components/PageHeader";
-const tabs = [
-  "Tasks",
-  "Revisions",
-  "Syllabus Progress",
-  "Weak Topic Analysis",
-  "Analytics",
-];
+
+import TodayTaskCards
+from "../components/TodayTaskCards";
+
+import {
+  fetchTodayTasks,
+} from "../../../services/scheduler/getTodayTasks";
+
+import useScheduleStore
+from "../../../stores/scheduleStore";
 
 function StudyHub() {
   const [
-  activeTab,
-  setActiveTab,
-] = useState("Tasks");
+    activeTab,
+
+    setActiveTab,
+  ] = useState(
+    "Tasks"
+  );
+
+  const setTasks =
+    useScheduleStore(
+      (state) =>
+        state.setTasks
+    );
+
+  useEffect(() => {
+    async function loadTasks() {
+      const groupedTasks =
+        await fetchTodayTasks();
+
+      setTasks(
+        groupedTasks
+      );
+
+       refreshTodayTasks();
+    }
+
+    loadTasks();
+  }, []);
+
+  const tabs = [
+    "Tasks",
+
+    "Syllabus Progress",
+  ];
 
   return (
-    
     <SectionCard>
       <HubTabs
-      
-  tabs={tabs}
-  activeTab={activeTab}
-  onTabChange={setActiveTab}
-/>
-{
-  activeTab ===
-    "Syllabus Progress" && (
-    <SyllabusProgressView />
-  )
-}
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={
+          setActiveTab
+        }
+      />
 
+      <div className="mt-6">
+        {activeTab ===
+          "Tasks" && (
+          <TodayTaskCards />
+        )}
 
+        {activeTab ===
+          "Syllabus Progress" && (
+          <SyllabusProgressView />
+        )}
+      </div>
     </SectionCard>
   );
 }
 
-export default StudyHub;
+export default
+  StudyHub;
